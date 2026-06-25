@@ -10,7 +10,7 @@ from oauth_client import oauth
 
 def get_refresh_expires_at(token: dict) -> str | None:
     if "refresh_expires_in" in token:
-        return (datetime.now(timezone.utc) + timedelta(seconds=token["refresh_expires_in"])).isoformat()
+        return (datetime.now() + timedelta(seconds=token["refresh_expires_in"])).isoformat()
 
     # декодируем refresh_token как JWT
     rt = token.get("refresh_token")
@@ -57,12 +57,12 @@ async def refresh_tokens(request: Request) -> bool:
 
     request.session["token"] = new_token
     request.session["access_token_expires_at"] = (
-        datetime.now(timezone.utc) + timedelta(seconds=new_token["expires_in"])
+        datetime.now() + timedelta(seconds=new_token["expires_in"])
     ).isoformat()
 
     if "refresh_expires_in" in new_token:
         request.session["refresh_token_expires_at"] = (
-            datetime.now(timezone.utc) + timedelta(seconds=new_token["refresh_expires_in"])
+            datetime.now() + timedelta(seconds=new_token["refresh_expires_in"])
         ).isoformat()
     else:
         request.session["refresh_token_expires_at"] = get_refresh_expires_at(new_token)

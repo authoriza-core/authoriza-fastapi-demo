@@ -103,13 +103,13 @@ async def callback(request: Request):
         request.session["login_time"] = datetime.now().isoformat()
         # время истечения токена
         request.session["access_token_expires_at"] = (
-            datetime.now(timezone.utc) + timedelta(seconds=token["expires_in"])
+            datetime.now() + timedelta(seconds=token["expires_in"])
         ).isoformat()
 
         # пытаемся достать срок жизни refresh_token
         if "refresh_expires_in" in token:  # если в самом токене нет
             request.session["refresh_token_expires_at"] = (
-                datetime.now(timezone.utc) + timedelta(seconds=token["refresh_expires_in"])
+                datetime.now() + timedelta(seconds=token["refresh_expires_in"])
             ).isoformat()
         else:  # то декодируем как JWT
             request.session["refresh_token_expires_at"] = get_refresh_expires_at(token)
