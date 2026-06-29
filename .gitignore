@@ -9,6 +9,7 @@ auth_data.json
 
 # Python cache
 __pycache__/
+.controllers/__pycache__/
 *.pyc
 
 # IDE
