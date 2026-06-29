@@ -10,8 +10,6 @@
 
     {% if authenticated %}
         <p>Статус: <b>Авторизован</b></p>
-        <p>Имя: {{ user.name or user.given_name or user.preferred_username or '—' }}</p>
-        <p>Email: {{ user.email or '—' }}</p>
         <br>
 
         <h3>ID Token Payload</h3>
@@ -20,10 +18,6 @@
 
         <h3>Access Token Payload</h3>
         <pre>{% if access_token_payload %}{{ access_token_payload | tojson(indent=2) }}{% else %}—{% endif %}</pre>
-        <br>
-
-        <h3>UserInfo</h3>
-        <pre>{% if user %}{{ user | tojson(indent=2) }}{% else %}—{% endif %}</pre>
         <br>
 
         <p>Получено: {{ login_time or '—' }}</p>

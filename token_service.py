@@ -47,7 +47,6 @@ async def refresh_tokens(request: Request) -> bool:
 
     metadata = await oauth.authoriza.load_server_metadata()
     token_endpoint = metadata.get("token_endpoint")
-    userinfo_endpoint = metadata.get("userinfo_endpoint")
 
     async with oauth.authoriza._get_oauth_client(**metadata) as client:
         new_token = await client.refresh_token(
@@ -69,33 +68,14 @@ async def refresh_tokens(request: Request) -> bool:
 
     request.session["last_refresh_time"] = datetime.now().isoformat()
 
-    # обновление UserInfo
-    if userinfo_endpoint:
-        try:
-            headers = {
-                "Authorization": f"Bearer {new_token['access_token']}",
-            }
-
-            async with oauth.authoriza._get_oauth_client(**metadata) as client2:
-                resp = await client2.get(userinfo_endpoint, headers=headers)
-
-            if resp.status_code == 200:
-                request.session["user"] = resp.json()
-                request.session["userinfo_received_at"] = datetime.now().isoformat()
-
-        except Exception as e:
-            print(f"[AUTO REFRESH] UserInfo error: {e}")
-
     # сохранение новых токенов
     # так как вызов внутри функции обновления, токены всегда свежие
     save_auth_data(
         request.session["token"],
-        request.session["user"],
         request.session["login_time"],
         request.session["access_token_expires_at"],
         request.session.get("refresh_token_expires_at"),  # для предотвращения KeyError
-        request.session.get("userinfo_received_at"),
-        request.session.get("last_refresh_time"),
+        request.session.get("last_refresh_time")
     )
 
     return True
