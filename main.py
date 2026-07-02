@@ -16,7 +16,10 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-OIDC_METADATA_URL = os.getenv("OIDC_METADATA_URL", "https://oidc.authoriza.ru/")
+OIDC_METADATA_URL = os.getenv(
+    "OIDC_METADATA_URL", 
+    "https://oidc.authoriza.ru/oidc/.well-known/openid-configuration"
+)
 
 # настройка OAuth-клиента
 setup_oauth(
